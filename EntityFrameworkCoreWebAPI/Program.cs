@@ -11,7 +11,6 @@ builder.Services.AddOpenApi();
 
 // Registrera Services
 builder.Services.AddOpenApi();
-//builder.Services.AddDbContext<TodoDb>(options => options.UseSqlite("Data Source=todo.db"));
 
 Env.Load();
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION");
