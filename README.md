@@ -6,7 +6,7 @@ Denna guide visar hur du skapar ett **Minimal Web API** i .NET med **SQLite** oc
 
 ## Förutsättningar
 
-- .NET 6 eller senare installerad  
+- .NET 6 eller senare installerad. Jag körde .Net 9  
 - En utvecklingsmiljö som kan köra .NET-projekt (Visual Studio, VS Code eller CLI)  
 - Grundläggande kunskap om C#, Web API och Entity Framework Core  
 
@@ -21,6 +21,7 @@ dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet add package Microsoft.EntityFrameworkCore.Relational
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 dotnet add package Microsoft.EntityFrameworkCore.Tools
+dotnet add package DotNetEnv
 dotnet add package Scalar.AspNetCore
 ```
 
@@ -38,7 +39,7 @@ dotnet new webapi -n MinimalApiWithScalar
 cd MinimalApiWithScalar
 ```
 
-### 2. Lägg till EF Core-paket och Scalar
+### 2. Lägg till EF Core-paket, Scalar och DotNetEnv
 Se ovanstående `dotnet add package`-kommandon.
 
 ---
@@ -70,19 +71,25 @@ public class TodoDb : DbContext
 ```csharp
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using DotNetEnv; // <-- Lägg till för att ha DB_CONNECTION i .env
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+
+Env.Load(); // <-- Lägg till för att ha DB_CONNECTION i .env
+
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION"); // <-- Lägg till för att ha DB_CONNECTION i .env
+
 builder.Services.AddDbContext<TodoDb>(options =>
-    options.UseSqlite("Data Source=todo.db"));
+    options.UseSqlite("connectionString")); // <-- Lägg till för att ha DB_CONNECTION i .env
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference(); // <--- aktiverar Scalar UI
+    app.MapScalarApiReference();
 }
 
 app.MapGet("/todos", async (TodoDb db) => await db.Todos.ToListAsync());
@@ -95,7 +102,14 @@ app.MapPost("/todos", async (TodoDb db, TodoItem item) =>
 
 app.Run();
 ```
+---
 
+### 4.b Skapa en .env fil ir projekt-rooten `.env`
+Med innehållet och namnet du vill ha på databasen. Och göm den med .gitignore
+
+```
+DB_CONNECTION="Data Source=mindatabas.db"
+```
 ---
 
 ### 5. Kontrollera CLI och installera `dotnet-ef`

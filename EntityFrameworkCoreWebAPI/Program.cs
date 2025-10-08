@@ -24,7 +24,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference(); // Scalar UI
+    app.MapScalarApiReference();
 }
 
 app.MapGet("/todos", async (TodoDb db) => await db.TodoItems.ToListAsync());
