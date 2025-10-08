@@ -1,6 +1,7 @@
 using EntityFrameworkCoreWebAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,14 @@ builder.Services.AddOpenApi();
 
 // Registrera Services
 builder.Services.AddOpenApi();
-builder.Services.AddDbContext<TodoDb>(options => options.UseSqlite("Data Source=todo.db"));
+//builder.Services.AddDbContext<TodoDb>(options => options.UseSqlite("Data Source=todo.db"));
+
+Env.Load();
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION");
+
+builder.Services.AddDbContext<TodoDb>(options =>
+    options.UseSqlite(connectionString));
+
 
 var app = builder.Build();
 

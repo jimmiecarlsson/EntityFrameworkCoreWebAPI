@@ -98,7 +98,27 @@ app.Run();
 
 ---
 
-### 5. Skapa och migrera databas
+### 5. Kontrollera CLI och installera `dotnet-ef`
+Innan du kör migrationer, kontrollera att verktyget **Entity Framework CLI** är installerat.
+
+```bash
+dotnet --version
+```
+Om detta fungerar, installera eller uppdatera `dotnet-ef`:
+
+```bash
+dotnet tool install --global dotnet-ef
+dotnet tool update --global dotnet-ef
+dotnet ef --version
+```
+Om `dotnet ef` inte känns igen, starta om PowerShell/VS Code och kontrollera att följande sökväg finns i PATH:
+```
+%USERPROFILE%\.dotnet\tools
+```
+
+---
+
+### 6. Skapa och migrera databas
 ```bash
 dotnet ef migrations add InitialCreate
 dotnet ef database update
@@ -106,7 +126,7 @@ dotnet ef database update
 
 ---
 
-### 6. Kör projektet
+### 7. Kör projektet
 ```bash
 dotnet run
 ```
@@ -144,6 +164,5 @@ Mer info: [https://scalar.com/openapi](https://scalar.com/openapi)
 ✅ Minimal API  
 ✅ SQLite via EF Core  
 ✅ OpenAPI-dokumentation  
-✅ Scalar istället för Swagger UI
-
----
+✅ Scalar istället för Swagger UI  
+✅ CLI-version & dotnet-ef-kontroll inlagd
