@@ -16,7 +16,7 @@ Env.Load();
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION");
 
 builder.Services.AddDbContext<TodoDb>(options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlServer(connectionString));
 
 
 var app = builder.Build();
