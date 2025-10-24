@@ -1,4 +1,4 @@
-# Minimal Web API med SQLite, Entity Framework Core och Scalar (OpenAPI)
+# Minimal Web API med SQL Server Express, Entity Framework Core och Scalar (OpenAPI)
 
 Denna guide visar hur du skapar ett **Minimal Web API** i .NET med **SQLite** och **Entity Framework Core**, samt hur du exponerar och testar API:et med **OpenAPI** via **Scalar** — ett modernt alternativ till Swagger UI.
 
@@ -19,7 +19,7 @@ Installera följande paket:
 ```bash
 dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet add package Microsoft.EntityFrameworkCore.Relational
-dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 dotnet add package Microsoft.EntityFrameworkCore.Tools
 dotnet add package DotNetEnv
 dotnet add package Scalar.AspNetCore
@@ -105,10 +105,11 @@ app.Run();
 ---
 
 ### 4.b Skapa en .env fil ir projekt-rooten `.env`
-Med innehållet och namnet du vill ha på databasen. Och göm den med .gitignore
+Med innehållet och namnet du vill ha på databasen. Och göm den med .gitignore. Ersätt SERVERNAMN med namnet på din SQL Server likaså DATABASNAMN med namnet du vill ha på din databas.
+Observera att du inte behöver skapa databasen innan utan det gör migrationen nedan. Blir säkert en konflikt om du har en databas med samma namn och som du inte har skapat med EF.
 
 ```
-DB_CONNECTION="Data Source=mindatabas.db"
+DB_CONNECTION=Server=SERVERNAMN\SQLEXPRESS;Database=DATABASNAMN;Trusted_Connection=True;Trust Server Certificate=True;
 ```
 ---
 
@@ -116,7 +117,7 @@ DB_CONNECTION="Data Source=mindatabas.db"
 Innan du kör migrationer, kontrollera att verktyget **Entity Framework CLI** är installerat.
 
 ```bash
-dotnet --version
+dotnet-ef --version
 ```
 Om detta fungerar, installera eller uppdatera `dotnet-ef`:
 
@@ -146,7 +147,7 @@ dotnet run
 ```
 
 Öppna sedan i webbläsaren:  
-👉 **`https://localhost:5001/scalar/v1`**
+👉 **`https://localhost:5001/scalar/v1`** (port:5001 du kan ha något annat)
 
 Där hittar du Scalar-gränssnittet med din OpenAPI-specifikation (ersätter Swagger).
 
@@ -168,7 +169,7 @@ Mer info: [https://scalar.com/openapi](https://scalar.com/openapi)
 ## Tips
 
 - För produktion: avaktivera `app.MapScalarApiReference()` utanför `Development`-miljö.  
-- Kontrollera att SQLite-filen (`todo.db`) skapas i projektets rotmapp.  
+- Kontrollera att SQLServer tar emot data.  
 - Använd `dotnet watch run` under utveckling för snabbare feedback.  
 
 ---
@@ -176,7 +177,7 @@ Mer info: [https://scalar.com/openapi](https://scalar.com/openapi)
 ## Sammanfattning
 
 ✅ Minimal API  
-✅ SQLite via EF Core  
+✅ SQLServer via EF Core  
 ✅ OpenAPI-dokumentation  
 ✅ Scalar istället för Swagger UI  
 ✅ CLI-version & dotnet-ef-kontroll inlagd
